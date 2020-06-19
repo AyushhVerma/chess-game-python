@@ -176,7 +176,7 @@ def inline_move(move,s2):
 def pawn_move(move,s1,s2):
 	if (move[:4] in l1):
 		del l1[move[:4]]
-	d=((s2+"P"+(str(int(move[3])+1))+[move[4]]) if s1=="W" else (s1=="W" and s2+"P"+(str(int(move[3])-1))+[move[4]]))
+	d=((s2+"P"+move[4]+move[3]) if s1=="W" else (s1=="W" and s2+"P"+move[4]+move[4]))
 	if (move[:2]==s1+"P") and 	((s1=="W" and ((int(move[3])>int(move[5])))) or (s1=="B" and (int(move[3])<int (move[5])))):	
 		if ((move[2] is move[4]) and (abs(int(move[3])-int(move[5]))==1)and (board[move[5]][replace[move[4]]][0] in (' '))) \
 		or (abs(replace[move[2]]-replace[move[4]])==1 and ((board[move[5]][replace[move[4]]][0]==s2))):
