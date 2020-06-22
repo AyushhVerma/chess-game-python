@@ -1,0 +1,56 @@
+#a tic-tac-toe game
+
+board={'UL':' ','UM':' ','UR':' ',
+       'ML':' ','MM':' ','MR':' ',
+       'LL':' ','LM':' ','LR':' '}
+
+def boardres():
+    print(board['UL']+' │'+board['UM']+' │ '+board['UR'])
+    print('──┼'+'──┼' +'──')
+    print(board['ML']+' │'+board['MM']+' │ '+board['MR'])
+    print('──┼'+'──┼' +'──')
+    print(board['LL']+' │'+board['LM']+' │ '+board['LR'])
+boardres()
+    
+turn ='X'
+k=key=B=0
+while k<9:
+	move=input().upper()[:2]
+	if board[move] is ' ':
+		board[move]=turn
+		k+=1
+	elif board[move] is not '  ' :
+		print("already filled")
+		B=1
+	if  board['UL'] is board['UM'] is board['UR'] is not ' ' :
+		key=1
+	elif board['LL'] is board['LM'] is board['LR'] is not ' ':
+		key=1
+	elif board['ML'] is board['MM'] is board['MR'] is not ' ':
+		key=1
+	elif board['UL'] is board['ML'] is board['LL'] is not ' ':
+		key=1
+	elif board['UM'] is board['MM'] is board['LM'] is not ' ':
+		key=1
+	elif board['UR'] is board['MR'] is board['LR'] is not ' ':
+		key=1
+	elif board['UL'] is board['MM'] is board['LR'] is not ' ':
+		key=1
+	elif board['UR'] is board['MM'] is board['LL'] is not ' ':
+		key=1
+	boardres()
+	if key==1:
+		break
+	if B is 0:
+		if turn == 'X':
+			turn = 'O'
+		else:
+			turn ='X'
+	else:
+		B=0
+if not key :
+	print('X GAME X OVER X'.center(30,'*'),'RESULT : TIE',sep='\n')
+elif turn =='X':
+	print('X GAME X OVER X'.center(30,'*'),'RESULT : P1 wins',sep='\n')
+else:
+	print('X GAME X OVER X'.center(30,'*'),'RESULT : P2 wins',sep='\n')
