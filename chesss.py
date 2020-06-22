@@ -2,7 +2,7 @@ print(r'''
 ┌──┐┐  ┌ ┌──┐┌──┐ ┌──┐	┌──┐┌──┐ ┌──┐┌──┐ ┌──┐
 │   ├──┤ ├── └──┐ └──┐	│ ─┐├──┤ │  ││  │ ├── 
 └──┘┘  └ └──┘└──┘ └──┘	└──┘┘  └ ┘  └┘  └ └──┘
-''')		
+''')
 board={ '1':["BR │","BN │","BB │","BQ │","BK │","BB │","BN │","BR │"],
 		'2':["BP │","BP │","BP │","BP │","BP │","BP │","BP │","BP │"],
 		'3':["   │","   │","   │","   │","   │","   │","   │","   │"],
@@ -38,7 +38,8 @@ def change_piece_position(move):
 def invalid_function_call():
 	print("invalid move ,try again")
 
-def pawn_move(move,s1,s2,enpass):
+def pawn_move(*a):
+	move,s1,s2,enpass=a
 	if (move[:2]==s1+"P") and ((s1=="W" and ((int(move[3])>int(move[5])))) or (s1=="B" and (int(move[3])<int (move[5])))):	
 		if ((move[2] is move[4]) and (abs(int(move[3])-int(move[5]))==1)and (board[move[5]][replace[move[4]]][0] in (' '))) \
 		or (abs(replace[move[2]]-replace[move[4]])==1 and ((board[move[5]][replace[move[4]]][0]==s2))):
@@ -116,13 +117,20 @@ def bishop_move(move,s1,s2):
 	return False
 
 def clear_diagonal_move(move):
-	i,i1=min(int(move[3]),int(move[5]))+1,min(replace[move[2]],replace[move[4]])+1	
-	j,j1=max(int(move[3]),int(move[5])),max(replace[move[2]],replace[move[4]])
-	while i<j:
-		if board[str(i)][i1][0]!= ' ':
-			return False
-		i+=1
-		i1+=1
+	i,j,i1,j1=replace[move[2]],int(move[3]),replace[move[4]],int(move[5])
+	if (i-i1)>0 and (j-j1)>0:
+		l=[-1,-1]
+	elif (i-i1)>0 and (j-j1)<0:
+		l=[-1,1]
+	elif (i-i1)<0 and (j-j1)>0:
+		l=[1,-1]
+	elif (i-i1)<0 and (j-j1)<0:
+		l=[1,1]
+		while i!=i1:
+			i+=l[0]
+			j+=l[1]
+			if board[str(j)][i][0]!= ' ':
+				return False
 	return True
 
 def diagonal_move(move,s2):
@@ -177,68 +185,68 @@ def castle_move(change,at):
 			board[at][5]="WR │"
 			board[at][7]="   │"
 
-def function_for_check(pos,s1,s2):
-	i,j=replace[pos[0]]+1,pos[1]
+def function_for_check(pos_king,s1,s2):
+	i,j=replace[pos_king[0]]+1,pos_king[1]
 	while i<=7:
 		if board[j][i][0]==s1:
 			break
 		elif board[j][i][1] in ('R','Q'):
-			return True,[i,j,'I']
+			return True,[i,int(j),'I']
 		i+=1
-	i,j=replace[pos[0]]-1,pos[1]
+	i,j=replace[pos_king[0]]-1,pos_king[1]
 	while i>=0:	
 		if board[j][i][0]==s1:
 			break
 		elif board[j][i][1] in ('R','Q'):
-			return True,[i,j,'I']
+			return True,[i,int(j),'I']
 		i-=1
-	i,j=replace[pos[0]],int(pos[1])+1
+	i,j=replace[pos_king[0]],int(pos_king[1])+1
 	while j<=8:	
 		if board[str(j)][i][0]==s1:
 			break
 		elif board[str(j)][i][1] in ('R','Q'):
 			return True,[i,j,'I']
 		j+=1
-	i,j=replace[pos[0]],int(pos[1])-1
+	i,j=replace[pos_king[0]],int(pos_king[1])-1
 	while j>=1:	
 		if board[str(j)][i][0]==s1:
 			break
 		elif board[str(j)][i][1] in ('R','Q'):
 			return True,[i,j,'I']
 		j-=1
-	i,j=replace[pos[0]],int(pos[1])
+	i,j=replace[pos_king[0]],int(pos_king[1])
 	l=[[2,-1],[2,1],[1,2],[-1,-2],[-2,-1],[-2,1],[-1,2],[1,-2]]
 	for x,y in l:
 		if (i+x) in range(8) and (y+j)in range(1,9) :
 			if board[str(j+y)][i+x][:2]==s2+'N':
 				return True,[i,j,'N']
-	i,j=replace[pos[0]],int(pos[1])
+	i,j=replace[pos_king[0]],int(pos_king[1])
 	if s1=='W' and (board[str(j-1)][i+1][:2] or board[str(j-1)][i-1][:2])==s2+"P":
 		return True,[i,j,'P']
 	elif s1=="B" and (board[str(j+1)][i+1][:2] or board[str(j+1)][i-1][:2])==s2+"P":
 		return True,[i,j,'P']
-	i,j=replace[pos[0]]+1,int(pos[1])+1
+	i,j=replace[pos_king[0]]+1,int(pos_king[1])+1
 	while i<=7 and j<=8:
 		if board[str(j)][i][0]==s1:
 			break
 		elif board[str(j)][i][1] in ('B','Q'):
 			return True,[i,j,'D']
 		i,j=i+1,j+1
-	i,j=replace[pos[0]]-1,int(pos[1])-1
+	i,j=replace[pos_king[0]]-1,int(pos_king[1])-1
 	while i>=0 and j>=1:
 		if board[str(j)][i][0]==s1:
 			break
 		elif board[str(j)][i][1] in ('B','Q'):
 			return True,[i,j,'D']
 		i,j=i-1,j-1
-	i,j=replace[pos[0]]-1,int(pos[1])+1
+	i,j=replace[pos_king[0]]-1,int(pos_king[1])+1
 	while i>=0 and j<=8:
 		if board[str(j)][i][0]==s1:
 			break
 		elif board[str(j)][i][1] in ('B','Q'):
 			return True,[i,j,'D']
 		i,j=i-1,j+1
-	i,j=replace[pos[0]]+1,int(pos[1])-1
+	i,j=replace[pos_king[0]]+1,int(pos_king[1])-1
 	while i<=7 and j>=1:
 		if board[str(j)][i][0]==s1:
 			break
@@ -254,25 +262,25 @@ def function_for_checkmate(king,s2,s1,pos):
 		if a<i and b>j:
 			while a<=i and b>=j:
 				a,b=a+1,b-1
-				if function_for_check(str(a)+str(b),s2,s1) or (s2=="W" and a!=i and ((b==5 and board[str(a+2)][b][:2]=="WP" or board[str(a+1)][b][:2]=="WP"))) or \
+				if function_for_check(last_func(a)+str(b),s2,s1) or (s2=="W" and a!=i and ((b==5 and board[str(a+2)][b][:2]=="WP" or board[str(a+1)][b][:2]=="WP"))) or \
 				  (s2=='B'and a!=i and((b==2 and board[str(b-2)][a][:2]=="BP") or (board[str(b-1)][a][:2]=="BP"))):
 					return False
 		elif a<i and b<j:
 			while a<=i and b<=j:
 				a,b=a+1,b+1
-				if function_for_check(str(a)+str(b),s2,s1) or (s2=="W" and a!=i and ((b==5 and board[str(a+2)][b][:2]=="WP" or board[str(a+1)][b][:2]=="WP"))) or \
+				if function_for_check(last_func(a)+str(b),s2,s1) or (s2=="W" and a!=i and ((b==5 and board[str(a+2)][b][:2]=="WP" or board[str(a+1)][b][:2]=="WP"))) or \
 				(s2=='B'and a!=i and((b==2 and board[str(b-2)][a][:2]=="BP") or (board[str(b-1)][a][:2]=="BP"))):
 					return False
 		elif a>i and b<j:
 			while a>=i and b<=j:
 				a,b=a-1,b+1
-				if function_for_check(str(a)+str(b),s2,s1) or (s2=="W" and a!=i and ((b==5 and board[str(a+2)][b][:2]=="WP" or board[str(a+1)][b][:2]=="WP"))) or \
+				if function_for_check(last_func(a)+str(b),s2,s1) or (s2=="W" and a!=i and ((b==5 and board[str(a+2)][b][:2]=="WP" or board[str(a+1)][b][:2]=="WP"))) or \
 				  (s2=='B'and a!=i and((b==2 and board[str(b-2)][a][:2]=="BP") or (board[str(b-1)][a][:2]=="BP"))):
 					return False			
 		elif a>i and b>j:
 			while a>=i and b>=j:
 				a,b=a-1,b-1
-				if function_for_check(str(a)+str(b),s2,s1) or (s2=="W" and a!=i and ((b==5 and board[str(a+2)][b][:2]=="WP" or board[str(a+1)][b][:2]=="WP"))) or \
+				if function_for_check(last_func(a)+str(b),s2,s1) or (s2=="W" and a!=i and ((b==5 and board[str(a+2)][b][:2]=="WP" or board[str(a+1)][b][:2]=="WP"))) or \
 				(s2=='B'and a!=i and((b==2 and board[str(b-2)][a][:2]=="BP") or (board[str(b-1)][a][:2]=="BP"))):
 					return False
 		return True
@@ -281,39 +289,44 @@ def function_for_checkmate(king,s2,s1,pos):
 		if a>i and b==j:
 			while a>=i:
 				a-=1
-				if function_for_check(str(a)+str(b),s2,s1) or(s2=='W'and a!=i and((b==5 and board[str(b+2)][a][:2]=="WP") or (board[str(b+1)][a][:2]=="WP")))\
+				if function_for_check(last_func(a)+str(b),s2,s1) or(s2=='W'and a!=i and((b==5 and board[str(b+2)][a][:2]=="WP") or (board[str(b+1)][a][:2]=="WP")))\
 				or (s2=='B'and a!=i and((b==2 and board[str(b-2)][a][:2]=="BP") or (board[str(b-1)][a][:2]=="BP"))):
 					return False
 		elif a<i and b==j:
 			while a<=i:
 				a+=1
-				if function_for_check(str(a)+str(b),s2,s1) or (s2=='W'and a!=i and((b==5 and board[str(b+2)][a][:2]=="WP") or (board[str(b+1)][a][:2]=="WP")))\
+				if function_for_check(last_func(a)+str(b),s2,s1) or (s2=='W'and a!=i and((b==5 and board[str(b+2)][a][:2]=="WP") or (board[str(b+1)][a][:2]=="WP")))\
 				or (s2=='B'and a!=i and((b==2 and board[str(b-2)][a][:2]=="BP") or (board[str(b-1)][a][:2]=="BP"))):
 					return False
 		elif a==i and b<j:
 			while b<=j:
 				b+=1
-				if function_for_check(str(a)+str(b),s2,s1) :
+				if function_for_check(last_func(a)+str(b),s2,s1) :
 					return False
 		elif a==i and b>j:
 			while a>=i: 
 				b-=1
-				if function_for_check(str(a)+str(b),s2,s1) :
+				if function_for_check(last_func(a)+str(b),s2,s1) :
 					return False            
-	elif pos[2]=='P' and function_for_check(str(pos[0])+str(pos[1]),s2,s1):
+	elif pos[2]=='P' and function_for_check(last_func(pos[0])+str(pos[1]),s2,s1):
 		return False
-	elif pos[2]=='N' and function_for_check(str(pos[0])+str(pos[1]),s2,s1):
+	elif pos[2]=='N' and function_for_check(last_func(pos[0])+str(pos[1]),s2,s1):
 		return False
 	return True
 
 def king_check_move(pos,s1,s2):
-	i,j=replace[pos[0]],int(pos[0])
-	l=[[1,1],[-1,-1],[1,0],[0,1],[-1,0][0,-1][1,-1],[-1,1]]
+	i,j=replace[pos[0]],int(pos[1])
+	l=[[1,1],[-1,-1],[1,0],[0,1],[-1,0],[0,-1],[1,-1],[-1,1]]
 	for x,y in l:
 		if (i+x) in range(8) and (y+j)in range(1,9):
-			if (board[str(j+y)][i+x][0]=='W') and (function_for_check(str(x+i)+str(y+j),s1,s2)):
+			if (board[str(j+y)][i+x][0]=='W') and (function_for_check(last_func(x+i)+str(y+j),s1,s2)):
 				return False
 	return True
+
+def last_func(x):
+	for i in replace:
+		if replace[i]==1:
+			return i
 
 def Game_Start():
 	check,k=False,0
@@ -401,7 +414,8 @@ def Game_Start():
 			or (((castling_p1("WKE8H8","W","B",castling_white)) or (castling_p1("WKE8A8","W","B",castling_white))) if k%2==0 else \
 			((castling_p2("BKE1H1","B","W",castling_black)) or (castling_p2("BKE1A1","B","W",castling_black)))) 
 			if (not checkmate):
-				print(" Checkmate... ,%s wins "%turn[k%2])
+				print_board()
+				print(" Checkmate... ,%s wins "%turn[(k+1)%2])
 				break
 			print(" Check! ")
 		print_board()
