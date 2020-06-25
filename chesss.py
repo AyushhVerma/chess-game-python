@@ -1,7 +1,10 @@
 print(r''' 
-┌──┐┐  ┌ ┌──┐┌──┐ ┌──┐	┌──┐┌──┐ ┌──┐┌──┐ ┌──┐
-│   ├──┤ ├── └──┐ └──┐	│ ─┐├──┤ │  ││  │ ├── 
-└──┘┘  └ └──┘└──┘ └──┘	└──┘┘  └ ┘  └┘  └ └──┘
+   _____ _                      _____                      
+  / ____| |                    / ____|                     
+ | |    | |__   ___  ___ ___  | |  __  __ _ _ __ ___   ___ 
+ | |    | '_ \ / _ \/ __/ __| | | |_ |/ _` | '_ ` _ \ / _ \
+ | |____| | | |  __/\__ \__ \ | |__| | (_| | | | | | |  __/
+  \_____|_| |_|\___||___/___/  \_____|\__,_|_| |_| |_|\___|
 ''')
 board={ '1':["BR │","BN │","BB │","BQ │","BK │","BB │","BN │","BR │"],
 		'2':["BP │","BP │","BP │","BP │","BP │","BP │","BP │","BP │"],
@@ -65,7 +68,7 @@ def check_pawn_promotion(move,s1):
 
 def pawn_promotion(promote,at):
 	new=input("['R' for Rook, 'N' for Knight, 'B' for Bishop, 'Q' for Queen]").upper()
-	if new not in ('R','N','Q','B'):
+	if new not in 'RNQB':
 		print("enter valid piece")
 	elif promote == 'b':
 		board[at[1]][replace[at[0]]]="B"+new+" │"
@@ -190,28 +193,28 @@ def function_for_check(pos_king,s1,s2):
 	while i<=7:
 		if board[j][i][0]==s1:
 			break
-		elif board[j][i][1] in ('R','Q'):
+		elif board[j][i][1] in 'RQ':
 			return True,[i,int(j),'I']
 		i+=1
 	i,j=replace[pos_king[0]]-1,pos_king[1]
 	while i>=0:	
 		if board[j][i][0]==s1:
 			break
-		elif board[j][i][1] in ('R','Q'):
+		elif board[j][i][1] in 'RQ':
 			return True,[i,int(j),'I']
 		i-=1
 	i,j=replace[pos_king[0]],int(pos_king[1])+1
 	while j<=8:	
 		if board[str(j)][i][0]==s1:
 			break
-		elif board[str(j)][i][1] in ('R','Q'):
+		elif board[str(j)][i][1] in 'RQ':
 			return True,[i,j,'I']
 		j+=1
 	i,j=replace[pos_king[0]],int(pos_king[1])-1
 	while j>=1:	
 		if board[str(j)][i][0]==s1:
 			break
-		elif board[str(j)][i][1] in ('R','Q'):
+		elif board[str(j)][i][1] in 'RQ':
 			return True,[i,j,'I']
 		j-=1
 	i,j=replace[pos_king[0]],int(pos_king[1])
@@ -229,28 +232,28 @@ def function_for_check(pos_king,s1,s2):
 	while i<=7 and j<=8:
 		if board[str(j)][i][0]==s1:
 			break
-		elif board[str(j)][i][1] in ('B','Q'):
+		elif board[str(j)][i][1] in 'BQ':
 			return True,[i,j,'D']
 		i,j=i+1,j+1
 	i,j=replace[pos_king[0]]-1,int(pos_king[1])-1
 	while i>=0 and j>=1:
 		if board[str(j)][i][0]==s1:
 			break
-		elif board[str(j)][i][1] in ('B','Q'):
+		elif board[str(j)][i][1] in 'BQ':
 			return True,[i,j,'D']
 		i,j=i-1,j-1
 	i,j=replace[pos_king[0]]-1,int(pos_king[1])+1
 	while i>=0 and j<=8:
 		if board[str(j)][i][0]==s1:
 			break
-		elif board[str(j)][i][1] in ('B','Q'):
+		elif board[str(j)][i][1] in 'BQ':
 			return True,[i,j,'D']
 		i,j=i-1,j+1
 	i,j=replace[pos_king[0]]+1,int(pos_king[1])-1
 	while i<=7 and j>=1:
 		if board[str(j)][i][0]==s1:
 			break
-		elif board[str(j)][i][1] in ('B','Q'):
+		elif board[str(j)][i][1] in 'BQ':
 			return True,[i,j,'D']
 		i,j=i+1,j-1
 	return False,[]
