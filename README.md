@@ -1,4 +1,5 @@
-**GAMES IN PYTHON**
+**GAMES IN PYTHON (basic)**
+Without importing any module
 
 
 # chess
