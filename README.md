@@ -1,5 +1,4 @@
 **GAMES IN Basic PYTHON**
-
 (Without importing any module)
 
 # chess
@@ -11,3 +10,7 @@ input example --> if player wants to move black pawn from A2 to A4 tthen input: 
 
 Single and Multi-player
 input example --> if player wants to mark 'X' or 'O' on lower left block input: lL (Case-insensitive).
+
+# Game using Pygame
+
+Snake game
