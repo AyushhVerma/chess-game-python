@@ -7,7 +7,3 @@ input example --> if player wants to move black pawn from A2 to A4 tthen input: 
 
 * TIC-TAC-TOE 
 input example --> if player wants to mark 'X' or 'O' on lower left block input: lL (Case-insensitive).
-
-# GAME USING PYGAME
-
-* SNAKE GAME
